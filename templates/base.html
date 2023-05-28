@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="none">
+  {% block description %}{% endblock %}
+  {% block title %}{% endblock %}
+  <link rel="icon" href="{% static 'img/logo.webp' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% if messages %}
+    <link rel="stylesheet" href="{% static 'libs/alerts/alerts.min.css' %}">
+  {% endif %}
+  {% block styles %}{% endblock %}
+</head>
+<body>
+  {% block header %}
+    {% include '_header.html' %}
+  {% endblock %}
+
+  {% block content %}{% endblock %}
+
+  {% block footer %}
+    {% include '_footer.html' %}
+  {% endblock %}
+
+  {% if messages %}
+    <script src="{% static 'libs/alerts/alerts.min.js' %}"></script>
+  {% endif %}
+  {% block header_scripts %}
+    <script src="{% static 'js/burger.js' %}"></script>
+  {% endblock %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

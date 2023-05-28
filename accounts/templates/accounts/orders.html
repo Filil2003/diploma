@@ -1,0 +1,98 @@
+{% extends  'base.html' %}
+
+{% load static %}
+{% load utils %}
+
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block description %}
+  <meta name="description" content="Страница уборок пользователя">
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'accounts/css/orders.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="wrapper">
+    <form method="get" class="filters">
+      {% if request.GET.status != 'completed' %}
+        <button class="filter active" type="submit" name="status" value="closest">Ближайшие</button>
+        <button class="filter " type="submit" name="status" value="completed">Выполненные</button>
+      {% else %}
+        <button class="filter" type="submit" name="status" value="closest">Ближайшие</button>
+        <button class="filter active" type="submit" name="status" value="completed">Выполненные</button>
+      {% endif %}
+    </form>
+    {% if messages %}
+      <div class="alerts">
+        {% for message in messages %}
+          <div class="alert {{ message.tags }}" role="alert">
+            <p class="alert__text">{{ message }}</p>
+            <button class="alert__close" type="button" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <ul class="orders">
+      {% for order in orders %}
+        {% if request.GET.status != 'completed' %}
+          <li class="order">
+            <p class="order__id">Заказ #{{ order.id }}</p>
+            <p class="order__title">{{ order.service_title }}</p>
+            <p class="order__scheduled-date">{{ order.scheduled_date }} {{ order.scheduled_time }}</p>
+            <p class="order__address">{{ order.address }}</p>
+            {% if order.payment_status == order.PaymentStatusEnum.PAYMENT_WAITING_FOR_PAYMENT %}
+              <div class="order__buttons">
+                <a href="{{ order.payment_url }}" class="order__button">Оплатить</a>
+              </div>
+            {% else %}
+              <form class="order__buttons" method="POST" action="{% url 'payment:refund' order_id=order.id %}">
+                {% csrf_token %}
+                <button type="submit" class="order__button order__button--cancel">Отменить</button>
+              </form>
+            {% endif %}
+            {% if order.payment_status == order.PaymentStatusEnum.PAYMENT_WAITING_FOR_CAPTURE %}
+              <p>К оплате: <strong>{{ order.total_price|format_price }}₽</strong></p>
+            {% endif %}
+          </li>
+        {% else %}
+          <li class="order">
+            <p class="order__id">Заказ #{{ order.id }}</p>
+            <p class="order__title">{{ order.service_title }}</p>
+            <p class="order__scheduled-date">{{ order.scheduled_date }} {{ order.scheduled_time }}</p>
+            <p class="order__address">{{ order.address }}</p>
+          </li>
+        {% endif %}
+      {% empty %}
+        <h1>У вас нет уборок</h1>
+      {% endfor %}
+    </ul>
+    <div class="pagination">
+      {% if page_obj.has_previous or page_obj.has_next %}
+        {% if page_obj.has_previous %}
+          <a href="?page=1" class="pagination-link">1</a>
+          <a href="?page={{ page_obj.previous_page_number }}"
+             class="pagination-link">&#171;</a>
+        {% else %}
+          <span class="pagination-link disabled">1</span>
+          <span class="pagination-link disabled">&#171;</span>
+        {% endif %}
+
+        <a href="?page={{ page_obj.number }}" class="pagination-link active">{{ page_obj.number }}</a>
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+             class="pagination-link">&#187;</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}"
+             class="pagination-link">{{ page_obj.paginator.num_pages }}</a>
+        {% else %}
+          <span class="pagination-link disabled">&#187;</span>
+          <span class="pagination-link disabled">{{ page_obj.paginator.num_pages }}</span>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block title %}
+  Order {{ order.id }} {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url "admin:index" %}">{% trans "Home" %}</a> &rsaquo;
+    <a href="{% url "admin:orders_order_changelist" %}">Orders</a>
+    &rsaquo;
+    <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a>
+    &rsaquo; Detail
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="module">
+    <h1>Order {{ order.id }}</h1>
+    <ul class="object-tools">
+      <li>
+        <a href="#" onclick="window.print();">
+          Print order
+        </a>
+      </li>
+    </ul>
+    <table>
+      <tr>
+        <th>{% trans 'Created' %}</th>
+        <td>{{ order.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans 'Customer' %}</th>
+        <td>{{ order.customer }}</td>
+      </tr>
+      <tr>
+        <th>{% trans 'Scheduled' %}</th>
+        <td>
+          {{ order.scheduled_date }} {{ order.scheduled_time }}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Address' %}</th>
+        <td>
+          {{ order.address }}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Total price' %}</th>
+        <td>{{ order.total_price }}₽</td>
+      </tr>
+      <tr>
+        <th>{% trans 'Execution Status' %}</th>
+        <td>{{ order.execution_status }}</td>
+      </tr>
+      <tr>
+        <th>{% trans 'Payment Status' %}</th>
+        <td>{{ order.payment_status }}</td>
+      </tr>
+      {% if order.payment_id %}
+        <tr>
+          <th>{% trans 'Payment id' %}</th>
+          <td>
+            <a href="{{ order.payment_url }}" target="_blank">
+              {{ order.payment_id }}
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+  </div>
+  <div class="module">
+    <h2>{% trans 'Included Options' %}</h2>
+    <table style="width:100%">
+      <thead>
+      <tr>
+        <th>{% trans 'Title' %}</th>
+        <th>{% trans 'Place' %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for option in order.service_included_options %}
+        <tr class="row{% cycle "1" "2" %}">
+          <td>{{ option.title }}</td>
+          <td>{{ option.place }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="module">
+    <h2>{% trans 'Extra options bought' %}</h2>
+    <table style="width:100%">
+      <thead>
+      <tr>
+        <th>{% trans 'Title' %}</th>
+        <th>{% trans 'Place' %}</th>
+        <th>{% trans 'Price' %}</th>
+        <th>{% trans 'Quantity' %}</th>
+        <th>{% trans 'Total' %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for option in order.service_extra_options %}
+        <tr class="row{% cycle "1" "2" %}">
+          <td>{{ option.title }}</td>
+          <td>{{ option.place }}</td>
+          <td>{{ option.price }}₽</td>
+          <td>
+            {% if option.quantity is not True %}
+              {{ option.quantity }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td>{{ option.total_price }}₽</td>
+        </tr>
+      {% endfor %}
+      <tr class="row">
+        <td colspan="4">Base Price</td>
+        <td>{{ order.service_base_price }}₽</td>
+      </tr>
+      <tr class="total">
+        <td colspan="4">Total</td>
+        <td>{{ order.total_price }}₽</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

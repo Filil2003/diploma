@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load utils %}
+
+{% block description %}
+  <meta name="description" content="{{ service.description }}">
+{% endblock %}
+{% block title %}
+  <title>{{ service.title }}</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'cleaning/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+  <main>
+    <svg display="none" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="prompt" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </symbol>
+    </svg>
+    <section
+      {% if service.banner %}
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), url('{{ service.banner.url }}')"
+      {% endif %}
+    >
+      <h1>{{ service.title }}</h1>
+      <span class="sub-title">{{ service.description }}</span>
+    </section>
+    <section class="wrapper">
+      <h2>Что входит в услугу</h2>
+      <span class="sub-title">Клинер приедет в удобное для вас время и наведёт порядок</span>
+      <ul class="options">
+        {% for place, options in details.items %}
+          <li class="option">
+            <div class="option__titles">
+              <h3>{{ place.place.title }}</h3>
+              <h4>ВХОДИТ В СТОИМОСТЬ</h4>
+              <h4>МОЖНО ДОБАВИТЬ</h4>
+            </div>
+            <div class="option__content">
+              <div class="option__thumbnail-container" data-title="{{ place.place.title }}">
+                {% if place.thumbnail %}
+                  <img class="option__thumbnail" src="{{ place.thumbnail.url }}"
+                       alt="{{ place.place.title }}">
+                {% endif %}
+              </div>
+              <ul class="option__included" data-title="ВХОДИТ В СТОИМОСТЬ">
+                {% for option in options.included_options %}
+                  <li>
+                    <p>{{ option.option.title }}</p>
+                    <span class="prompt">
+                      <svg class="prompt__icon"><use href="#prompt"></use></svg>
+                      <span class="prompt__text">{{ option.option.description }}</span>
+                    </span>
+                  </li>
+                {% endfor %}
+              </ul>
+              <ul class="option__extra" data-title="МОЖНО ДОБАВИТЬ">
+                {% for option in options.extra_options %}
+                  <li>
+                    <div>
+                      <p>{{ option.option.title }}</p>
+                      <p>{{ option.price|format_price }}₽{% if option.option.unit %} за
+                        {{ option.option.unit }}{% endif %}</p>
+                    </div>
+                    <span class="prompt">
+                      <svg class="prompt__icon"><use href="#prompt"></use></svg>
+                      <span class="prompt__text">{{ option.option.description }}</span>
+                    </span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="wrapper">
+      <h2>Стоимость услуги от {{ service.base_price|format_price }}₽</h2>
+      <span class="sub-title">Стоимость без дополнительных опций</span>
+      <a href="{% url 'orders:create' slug=service.slug %}" class="button">Рассчитать стоимость</a>
+    </section>
+  </main>
+{% endblock %}

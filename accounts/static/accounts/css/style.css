@@ -1,0 +1,10 @@
+@import '_form.css';
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+    gap: 1em;
+}

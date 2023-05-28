@@ -1,0 +1,154 @@
+{% load i18n %}
+{% block extra_css %}
+  <style>
+      .image_preview {
+          position: relative;
+          overflow: hidden;
+          min-width: 200px;
+          height: 200px;
+          border: 1px solid var(--border-color);
+          border-radius: 5px;
+      }
+
+
+      .image_preview button {
+          font-family: var(--font-family-primary);
+          line-height: 0.9375rem;
+          position: absolute;
+          z-index: 1;
+          top: 50%;
+          width: max-content;
+          left: 50%;
+          height: 2.1875rem;
+          padding: 10px 15px;
+          cursor: pointer;
+          transition: background 0.15s, opacity 0.3s ease;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+          color: var(--button-fg);
+          border: none;
+          border-radius: 4px;
+          background-color: var(--default-button-bg);
+      }
+
+      .image_preview button:hover {
+          background-color: var(--default-button-hover-bg);
+      }
+
+      .image_preview::after {
+          position: absolute;
+          content: '';
+          transition: opacity 0.3s ease;
+          opacity: 0;
+          background-color: rgb(0 0 0 / 0.5);
+          inset: 0;
+      }
+
+      .image_preview:focus-within button,
+      .image_preview:focus-within::after,
+      .image_preview:hover button,
+      .image_preview:hover .delete,
+      .image_preview:hover::after {
+          opacity: 1;
+      }
+
+      .image_preview img {
+          width: auto;
+          height: 100%;
+          border-radius: 4px;
+      }
+
+      .image_preview .delete {
+          background-color: ghostwhite;
+          transition: border-color 0.15s, opacity 0.3s ease;
+          cursor: pointer;
+          position: absolute;
+          opacity: 0;
+          padding: 0;
+          z-index: 1;
+          width: 24px;
+          height: 24px;
+          top: 5px;
+          right: 5px;
+          border-radius: 50%;
+          border: 3px solid var(--default-button-bg);
+      }
+
+      .image_preview .delete svg {
+          transition: stroke 0.3s ease;
+          stroke: var(--default-button-bg);
+      }
+
+      .image_preview input:checked ~ .delete {
+          border-color: var(--message-error-bg);
+      }
+
+      .image_preview input:checked ~ .delete svg {
+          stroke: var(--message-error-bg);
+      }
+
+      .image_preview:has(input:checked) button {
+          background-color: var(--message-error-bg);
+          pointer-events: none;
+      }
+
+      .image_preview .delete:hover {
+          border-color: var(--default-button-hover-bg);
+      }
+
+      .image_preview .delete:hover svg {
+          stroke: var(--default-button-hover-bg);
+      }
+
+  </style>
+{% endblock %}
+<div class="image_preview">
+  {% if widget.is_initial %}<img src="{{ widget.value.url }}" alt="Preview">{% endif %}
+  <button type="button" tabindex="0">{% trans 'Выберите файл' %}</button>
+  <input type="{{ widget.type }}"
+         name="{{ widget.name }}"
+         hidden=""
+    {% include "django/forms/widgets/attrs.html" %}>
+  {% if not widget.required %}
+    <input type="checkbox"
+           name="{{ widget.checkbox_name }}"
+           id="{{ widget.checkbox_id }}"
+           {% if widget.attrs.disabled %}disabled{% endif %}
+           hidden="">
+    <label class="delete" for="{{ widget.checkbox_id }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </label>
+    </span>
+  {% endif %}
+</div>
+
+{% block extra_js %}
+  <script>
+    if (!document.onclick) {
+      document.onclick = function ({target}) {
+        if (target.type === "button" && target.parentNode.classList.contains("image_preview")) {
+          const input = target.nextElementSibling;
+          input.click();
+          if (input.onchange) return;
+          input.onchange = function () {
+            if (!target.previousElementSibling) {
+              const image = document.createElement("img");
+              image.src = "";
+              image.alt = "Preview";
+              target.parentNode.prepend(image);
+            }
+            let fileReader = new FileReader();
+            fileReader.onload = () => {
+              target.previousElementSibling.src = fileReader.result;
+            };
+            fileReader.readAsDataURL(this.files[0]);
+          };
+        }
+      };
+    }
+  </script>
+{% endblock %}

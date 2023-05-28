@@ -1,0 +1,169 @@
+main .wrapper {
+    max-width: 920px;
+    padding-block: 1em;
+}
+
+.form__step::after {
+    display: block;
+    height: 2px;
+    content: "";
+    background-color: currentColor;
+    margin-block: 1em;
+}
+
+h1 {
+    font-size: clamp(1.5em, 5vw, 2em);
+}
+
+.form_buttons {
+    display: grid;
+    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.button {
+    font-weight: 600;
+    display: grid;
+    transition: background-color 0.3s ease;
+    color: var(--text-color-light);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    padding-block: 0.825em;
+}
+
+@media (any-hover: hover) {
+    .button:hover {
+        background-color: var(--primary-color-hover);
+    }
+
+    .quantity-block button:hover,
+    .option-checkbox:hover::after {
+        color: var(--text-color-light);
+        background-color: var(--primary-color);
+    }
+}
+
+.button:active {
+    background-color: var(--primary-color-active);
+}
+
+.option-checkbox {
+    cursor: pointer;
+}
+
+.option-checkbox:active::after {
+    color: var(--text-color-light);
+    background-color: var(--primary-color-active);
+}
+
+.option-checkbox::after {
+    content: "Добавить";
+    border-top: 2px solid var(--gray-medium);
+    background-color: var(--gray-light);
+    padding-block: 0.5em;
+}
+
+input[type="checkbox"]:checked + .option-checkbox::after {
+    content: "Убрать";
+    color: var(--text-color-light);
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+
+input[type="checkbox"]:checked + .option-checkbox {
+    border-color: var(--primary-color);
+}
+
+.options {
+    display: grid;
+    border-radius: 0.5em;
+    margin-block: 1rem;
+    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+}
+
+.option {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    min-height: 9.5em;
+    user-select: none;
+    text-align: center;
+    border: 2px solid var(--gray-medium);
+    border-radius: 0.5em;
+    background-color: var(--white-color);
+}
+
+.option__header {
+    font-weight: 600;
+    display: grid;
+    flex-grow: 1;
+    padding: 0.5em;
+    place-content: center;
+    gap: 0.5em;
+}
+
+.option__title {
+
+}
+
+.option__place {
+    font-size: 0.8em;
+}
+
+.option__place:before {
+    content: '(';
+}
+
+.option__place:after {
+    content: ')';
+}
+
+.quantity-block {
+    display: grid;
+    border-color: inherit;
+    border-top-width: 2px;
+    border-top-style: solid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.number-minus,
+input[type="number"],
+.number-plus {
+    font-weight: 600;
+}
+
+.number-minus {
+    border-right-width: 2px;
+    border-right-style: solid;
+    border-right-color: inherit
+}
+
+.number-plus {
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: inherit;
+}
+
+
+.quantity-block button:active {
+    color: var(--text-color-light);
+    background-color: var(--primary-color-active);
+}
+
+input[type="number"] {
+    font-family: var(--font-family-monospace);
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    padding-block: 0.5em;
+}
+
+.option:has(input[type="number"]:not([value="0"])) {
+    border-color: var(--primary-color);
+}
+
+.option:has(input[type="number"]:not([value="0"])) button {
+    color: var(--text-color-light);
+    background-color: var(--primary-color);
+}

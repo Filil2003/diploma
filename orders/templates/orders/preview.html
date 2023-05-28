@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+{% load utils %}
+
+{% block description %}
+  {#  <meta name="description" content="{{ service.description }}">#}
+{% endblock %}
+{% block title %}
+  <title>Заказ | Предпросмотр</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'orders/css/preview.css' %}">
+{% endblock %}
+{% block content %}
+  <main>
+    <div class="wrapper">
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        <p class="form__step">Шаг {{ wizard.steps.step1 }} из {{ wizard.steps.count }}</p>
+        <h1>Предпросмотр заказа</h1>
+        <h2>Адрес и Время</h2>
+        <table class="appointment">
+          <tbody>
+          <tr>
+            <th>Город</th>
+            <td>{{ appointment.city }}</td>
+          </tr>
+          <tr>
+            <th>Улица</th>
+            <td>{{ appointment.street }}</td>
+          </tr>
+          <tr>
+            <th>Дом</th>
+            <td>{{ appointment.house }}</td>
+          </tr>
+          {% if appointment.flat %}
+            <tr>
+              <th>Квартира</th>
+              <td>{{ appointment.flat }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Дата</th>
+            <td>{{ appointment.scheduled_date }}</td>
+          </tr>
+          <tr>
+            <th>Время</th>
+            <td>{{ appointment.scheduled_time }}</td>
+          </tr>
+          </tbody>
+        </table>
+        {% if selected_extra_options %}
+          <h2>Дополнительные опции</h2>
+          <table class="extra-options">
+            <thead>
+            <tr>
+              <th>Опция</th>
+              <th>Место</th>
+              <th>Цена</th>
+              <th>Кол-во</th>
+              <th>Общая цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in selected_extra_options %}
+              <tr>
+                <td data-title="Опция">{{ data.option }}</td>
+                <td data-title="Место">{{ data.place }}</td>
+                <td data-title="Цена">{{ data.price|format_price }}₽</td>
+                <td data-title="Кол-во">
+                  {% if data.quantity is not True %}
+                    {{ data.quantity }} {{ data.quantity|ru_pluralize:data.unit_forms }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td data-title="Общая цена">{{ data.total_price|format_price }}₽</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        <h2>Итог</h2>
+        <table class="resume">
+          <tbody>
+          {% if extra_options_price %}
+            <tr>
+              <th>Базовая стоимость</th>
+              <td>{{ base_price|format_price }}₽</td>
+            </tr>
+            <tr>
+              <th>Cтоимость доп.опций</th>
+              <td>{{ extra_options_price|format_price }}₽</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Итоговая стоимость</th>
+            <td>{{ total_price|format_price }}₽</td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="form_buttons">
+          {% if wizard.steps.prev %}
+            <button class="button"
+                    name="wizard_goto_step"
+                    type="submit"
+                    value="{{ wizard.steps.prev }}">
+              Назад
+            </button>
+          {% endif %}
+          <button class="button" type="submit">Оформить заказ</button>
+        </div>
+      </form>
+    </div>
+  </main>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+

@@ -1,0 +1,99 @@
+.alerts {
+    display: grid;
+    --alert-success-color: #0f5132;
+    --alert-success-background-color: #d1e7dd;
+    --alert-success-border-color: #badbcc;
+    --alert-danger-color: #842029;
+    --alert-danger-background-color: #f8d7da;
+    --alert-danger-border-color: #f5c2c7;
+    --alert-info-color: #055160;
+    --alert-info-background-color: #cff4fc;
+    --alert-info-border-color: #b6effb;
+    --alert-warning-color: #664d03;
+    --alert-warning-background-color: #fff3cd;
+    --alert-warning-border-color: #ffecb5;
+    --alert-border-radius: 0.5rem;
+    row-gap: 1em;
+}
+
+.alert {
+    display: flex;
+    justify-content: space-between;
+    height: max-content;
+    border: 2px solid transparent;
+    border-radius: var(--alert-border-radius);
+    gap: 1em;
+}
+
+.alert:has(:focus) {
+    border-color: currentColor;
+}
+
+.alert-success {
+    color: var(--alert-success-color);
+    border-color: var(--alert-success-border-color);
+    background-color: var(--alert-success-background-color);
+}
+
+.alert-danger {
+    color: var(--alert-danger-color);
+    border-color: var(--alert-danger-border-color);
+    background-color: var(--alert-danger-background-color);
+}
+
+.alert-info {
+    color: var(--alert-info-color);
+    border-color: var(--alert-info-border-color);
+    background-color: var(--alert-info-background-color);
+}
+
+.alert-warning {
+    color: var(--alert-warning-color);
+    border-color: var(--alert-warning-border-color);
+    background-color: var(--alert-warning-background-color);
+}
+
+.alert__text {
+    align-self: center;
+    padding: 1em 0 1em 1em;
+    margin-block: 0;
+}
+
+.alert__close {
+    position: relative;
+    padding: 2em;
+    cursor: pointer;
+    color: currentColor;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.alert__close::before, .alert__close::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 2px;
+    content: "";
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 2px;
+    background-color: currentColor;
+}
+
+.alert__close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.alert-fade {
+    animation: fadeOutAnimation .3s forwards;
+}
+
+@keyframes fadeOutAnimation {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

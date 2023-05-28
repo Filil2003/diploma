@@ -1,0 +1,53 @@
+{% extends  'base.html' %}
+
+{% load static %}
+{% load utils %}
+
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+{% endblock %}
+
+{% block header %}{% endblock %}
+{% block content %}
+  <div class="wrapper">
+    <form class="form" method="post">
+      {% csrf_token %}
+      <h1 class="form__title">Регистрация</h1>
+      {% if messages %}
+        <div class="alerts">
+          {% for message in messages %}
+            <div class="alert {{ message.tags }}" role="alert">
+              <p class="alert__text">{{ message }}</p>
+              <button class="alert__close" type="button" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% for field in form %}
+        <div class="form__group">
+          {% if field.errors %}
+            {{ field|add_class:"is-invalid" }}
+          {% elif field.value %}
+            {{ field|add_class:"is-valid" }}
+          {% else %}
+            {{ field }}
+          {% endif %}
+          <label class="form__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% for error in field.errors %}
+            <div class="form__input-invalid-feedback">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <div class="form__footer">
+        <button class="form__button" type="submit">Зарегистрироваться</button>
+        <p>Есть аккаунт? <a class="form__link" href="{% url "accounts:login" %}">Войти!</a></p>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block header_scripts %}{% endblock %}

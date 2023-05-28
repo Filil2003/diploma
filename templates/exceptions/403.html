@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="alerts">
+    <div class="alert danger" role="alert">
+      <p class="alert__text">
+        {{ error_message }} | <a href="{% url 'cleaning:home' %}">
+        <strong>Вернуться на главную</strong></a>
+      </p>
+      <button class="alert__close" type="button" aria-label="Close"></button>
+    </div>
+  </div>
+{% endblock content %}

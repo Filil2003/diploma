@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load utils %}
+
+{% block description %}
+  <meta name="description" content="Выбор дополнительных опций">
+{% endblock %}
+{% block title %}
+  <title>Заказ | Дополнительные опции</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'orders/css/options.css' %}">
+{% endblock %}
+{% block content %}
+  <main>
+    <div class="wrapper">
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        <p class="form__step">Шаг {{ wizard.steps.step1 }} из {{ wizard.steps.count }}</p>
+        <h1>Выберите дополнительные опции</h1>
+        <div class="options">
+          {% for field in wizard.form %}
+            {% if field.field.widget.input_type == 'number' %}
+              <div class="option">
+                <div class="option__header">
+                  <p class="option__title">{{ field.label }}</p>
+                  <p class="option__place">{{ field.field.widget.attrs|get_attr:'data-place' }}</p>
+                  <p class="option__price">{{ field.field.widget.attrs|get_attr:'data-price'|format_price }}₽
+                    {% if field.field.widget.attrs|get_attr:'data-unit' %}за
+                      {{ field.field.widget.attrs|get_attr:'data-unit' }}{% endif %}</p>
+                </div>
+                <div class="quantity-block">
+                  <button class="number-minus" type="button" onclick="decreaseInputValue(this)">-</button>
+                  {{ field }}
+                  <button class="number-plus" type="button" onclick="increaseInputValue(this)">+</button>
+                </div>
+              </div>
+            {% else %}
+              {{ field }}
+              <label for="{{ field.id_for_label }}" class="option option-checkbox" tabindex="0">
+              <span class="option__header">
+                <span class="option__title">{{ field.label }}</span>
+                <span class="option__place">{{ field.field.widget.attrs|get_attr:'data-place' }}</span>
+                <span class="option__price">{{ field.field.widget.attrs|get_attr:'data-price'|format_price }}₽
+                  {% if field.field.widget.attrs|get_attr:'data-unit' %}за
+                    {{ field.field.widget.attrs|get_attr:'data-unit' }}{% endif %}</span>
+              </span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="form_buttons">
+          {% if wizard.steps.prev %}
+            <button class="button"
+                    name="wizard_goto_step"
+                    type="submit"
+                    value="{{ wizard.steps.prev }}">Назад
+            </button>
+          {% endif %}
+          <button class="button" type="submit">Далее</button>
+        </div>
+      </form>
+    </div>
+  </main>
+{% endblock %}
+{% block scripts %}
+  <script src="{% static 'orders/js/options.js' %}"></script>
+{% endblock %}

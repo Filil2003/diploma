@@ -1,0 +1,43 @@
+{% load static %}
+{% block header %}
+  <header class="header">
+    <p class="header__logo">CCLean</p>
+    <nav class="menu">
+      <ul class="menu__list" id="menu__list">
+        {% for service in services %}
+          <li class="menu__item">
+            <a href="{{ service.absolute_url }}">{{ service.short_title }}</a>
+          </li>
+        {% endfor %}
+        {% if user.is_authenticated %}
+          <li class="menu__item">
+            <a tabindex="0">Меню</a>
+            <ul class="submenu">
+              <li class="submenu__item">
+                <a href="{% url 'accounts:orders' %}">Мои уборки</a>
+              </li>
+              {% if user.is_staff %}
+                <li class="submenu__item">
+                  <a href="{% url 'admin:index' %}">Админка</a>
+                </li>
+              {% endif %}
+              <li class="submenu__item">
+                <a href="{% url 'accounts:logout' %}">Выйти</a>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="menu__item">
+            <a href="{% url 'accounts:login' %}">Войти</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu__list">
+      <svg class="burger__icon" width="32" height="32">
+        <use class="burger__icon_menu" href="{% static 'img/ico/burger.svg' %}#menu"></use>
+        <use class="burger__icon_cross" href="{% static 'img/ico/burger.svg' %}#cross"></use>
+      </svg>
+    </button>
+  </header>
+{% endblock %}

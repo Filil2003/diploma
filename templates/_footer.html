@@ -1,0 +1,25 @@
+{% block footer %}
+  <footer class="footer">
+    <div class="wrapper">
+      <div class="footer__body">
+        <ul class="services">
+          <li>Услуги</li>
+          {% for service in services %}
+            <li><a href="{{ service.absolute_url }}">{{ service.title }}</a></li>
+          {% endfor %}
+        </ul>
+        <ul class="contacts">
+          <li>Контакты</li>
+          <li><a href="tel:++79268861229">+7(926) 886-12-29</a></li>
+          <li><a href="mailto:cclean@yandex.ru">cclean@yandex.ru</a></li>
+        </ul>
+        <ul class="social">
+          <li>Соц. Сети</li>
+          <li><a href="https://vk.com" target="_blank">ВКонтакте</a></li>
+          <li><a href="https://ok.ru" target="_blank">Одноклассники</a></li>
+        </ul>
+      </div>
+      <div class="footer__copyright">© 2023 CClean. Все права защищены.</div>
+    </div>
+  </footer>
+{% endblock %}

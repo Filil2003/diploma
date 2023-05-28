@@ -1,0 +1,27 @@
+@import '_variables.css';
+@import '_normalize.css';
+@import '_header.css';
+@import '_footer.css';
+
+html {
+    font-family: var(--font-family-primary);
+    color: var(--text-color-dark);
+}
+
+body {
+    display: grid;
+    min-height: 100svh;
+    grid-template-rows: 1fr auto;
+}
+
+.body_lock {
+    overflow: hidden;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1236px;
+    padding-inline: 1em;
+    margin-inline: auto;
+}
+

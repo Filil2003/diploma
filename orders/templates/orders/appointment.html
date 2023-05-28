@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load utils %}
+{% block description %}
+  <meta name="description" content="Указание места и времени">
+{% endblock %}
+{% block title %}
+  <title>Заказ | Адрес и Время</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'libs/air-datepicker/air-datepicker.min.css' %}">
+  <link rel="stylesheet" href="{% static 'orders/css/appointment.css' %}">
+{% endblock %}
+{% block content %}
+  <main>
+    <div class="wrapper">
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        <p class="form__step">Шаг {{ wizard.steps.step1 }} из {{ wizard.steps.count }}</p>
+        <h1>Укажите адрес и время</h1>
+        {% for field in wizard.form %}
+          <div class="form__group">
+            {% if field.errors %}
+              {{ field|add_class:"is-invalid" }}
+            {% elif field.value %}
+              {{ field|add_class:"is-valid" }}
+            {% else %}
+              {{ field }}
+            {% endif %}
+            <label class="form__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% for error in field.errors %}
+              <div class="form__input-invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <div class="form_buttons">
+          <button class="form__button" type="submit">Далее</button>
+        </div>
+      </form>
+    </div>
+  </main>
+{% endblock %}
+{% block scripts %}
+  <script src="{% static 'libs/air-datepicker/air-datepicker.min.js' %}"></script>
+  <script src="{% static 'orders/js/appointment.js' %}"></script>
+{% endblock %}
