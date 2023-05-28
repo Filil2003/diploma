@@ -12,7 +12,7 @@
 1. Скачайте репозиторий приложения на свой локальный компьютер. Вы можете сделать это, выполнив следующую команду:
 
    ```bash
-   git clone https://github.com/your/repo.git
+   git clone https://github.com/Nachang220/diploma.git
    ```
 
 2. Перейдите в каталог проекта:
