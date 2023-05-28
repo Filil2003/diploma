@@ -98,7 +98,7 @@
 
 5. Добавьте внешний адрес в настройки Yookassa:
 
-   ![alt text](https://i.ibb.co/TKSfDDN/2023-05-28-173010099.png)
+   ![alt text](https://i.ibb.co/7W2TTMY/2023-05-28-182408398.png)
 
    А так же в файл .env в корне проекта:
    ```dotenv
