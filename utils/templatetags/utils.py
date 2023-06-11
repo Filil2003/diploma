@@ -32,3 +32,8 @@ def ru_pluralize(value, variants):
     singular, plural1, plural2 = variants.split(',')
     value = int(value)
     return choose_plural(value, (singular, plural1, plural2))
+
+
+@register.filter(name='has_tag')
+def has_tag(messages, tag):
+    return any(tag in message.tags for message in messages)
