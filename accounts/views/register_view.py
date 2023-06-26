@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.shortcuts import redirect
-from django.template.loader import render_to_string
+from django.template import context
+from django.template.loader import render_to_string, get_template
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import FormView
@@ -66,16 +67,11 @@ class RegisterView(FormView):
         path: str = reverse('accounts:activate', kwargs={'token': token})
         activation_url: str = f'{scheme}://{current_site}{path}'
 
-        # Get email template as a string.
-        message = render_to_string(
-            'accounts/email/activation_email.html',
-            {'activation_url': activation_url}
-        )
-
         # Send the user an email with a link to activate the account.
         user.email_user(
             subject='Подтверждение регистрации',
-            message=message,
+            message=None,
+            html_message=get_template('accounts/email/activation_email.html').render({'activation_url': activation_url}),
             fail_silently=False
         )
 
